@@ -20,7 +20,6 @@ def test_text_box(page: Page):
     page.locator('[data-qa-id="register_password_repeat_input"]').fill(password)
     page.click('[data-qa-id="register_submit_button"]')
 
-
     time.sleep(5)
 
 
