@@ -1,4 +1,3 @@
-# MAIN
 .pytest_cache
 .vscode
 .venv/
@@ -11,6 +10,11 @@ __pycache__/
 *.csv
 *.env
 .env
+.allure-report
+.allure-results
+allure-report
+allure-results
+sandbox
 
 ---
 
