@@ -16,6 +16,7 @@ def browser(playwright):
 
     yield browser  
 
+    logger.info('закрываем браузер')
     browser.close()  
 
 @pytest.fixture(scope="function")
@@ -33,6 +34,7 @@ def context(browser):
 
     yield context
 
+    logger.info("контекст опускается")
     context.close()
 
 @pytest.fixture(scope="function")
@@ -42,4 +44,5 @@ def page(context):
 
     yield page
 
+    logger.info("страница опускается")
     page.close()
