@@ -1,4 +1,4 @@
 python-dotenv 
 pytest
 playwright
-playwright-pytest
+pytest-playwright
