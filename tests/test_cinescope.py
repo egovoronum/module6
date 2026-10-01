@@ -7,7 +7,7 @@ from faker import Faker
 fake = Faker()
 
 @pytest.mark.UI
-def test_text_box(page: Page):
+def test_text_box(page: Page) -> None:
 
     name = fake.name()
     email = fake.email()
