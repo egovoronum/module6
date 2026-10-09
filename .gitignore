@@ -15,3 +15,5 @@ __pycache__/
 allure-report
 allure-results
 .logs/
+traces/
+logs/
