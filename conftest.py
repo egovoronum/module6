@@ -9,7 +9,7 @@ logger = get_logger(__name__)
 @pytest.fixture(scope="session")
 def browser(playwright):
     logger.info("поднимаем браузер")
-    browser = playwright.chromium.connect("ws://127.0.0.1:3000/")
+    browser = playwright.chromium.connect("ws://192.168.1.151:3000/")
 
     yield browser
 
