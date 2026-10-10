@@ -9,7 +9,13 @@ logger = get_logger(__name__)
 @pytest.fixture(scope="session")
 def browser(playwright):
     logger.info("поднимаем браузер")
-    browser = playwright.chromium.connect("ws://192.168.1.151:3000/")
+    browser = playwright.chromium.launch(
+        headless=False,
+        args=['--force-dark-mode', '--window-size=1920,1080']
+    )
+    
+    # docker container on rpi400
+    # browser = playwright.chromium.connect("ws://192.168.1.151:3000/")
 
     yield browser
 
@@ -19,7 +25,10 @@ def browser(playwright):
 
 @pytest.fixture(scope="function")
 def context(browser, request):
-    context = browser.new_context()
+    context = browser.new_context(
+        viewport={'width': 1920, 'height': 1080},
+        color_scheme='dark',
+    )
     context.set_default_timeout(DEFAULT_UI_TIMEOUT)
     context.tracing.start(screenshots=True, snapshots=True, sources=True)
 
