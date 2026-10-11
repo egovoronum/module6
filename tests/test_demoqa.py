@@ -1,11 +1,12 @@
 import pytest
+from pytest_check import check
 from playwright.sync_api import Page, expect
 import time
 from datetime import date
 from faker import Faker 
 import random
 
-fake = Faker()
+fake = Faker('en_US')
 
 @pytest.mark.skip
 def test_some_entities(page):
@@ -55,7 +56,7 @@ def test_button_demoqa(page: Page):
     time.sleep(1)
 
 def test_form_demoqa(page: Page):
-
+    
     today_date = date.today().strftime("%d %b %Y")
     print(f"Today's date: {today_date}")
 
@@ -67,7 +68,7 @@ def test_form_demoqa(page: Page):
 
     page.check(f'#gender-radio-{random.randint(1, 3)}')
 
-    page.get_by_placeholder("Mobile Number").type(fake.phone_number(), delay=50)
+    page.get_by_placeholder("Mobile Number").type(fake.numerify("##########"), delay=50)
     
     subjects_field = page.locator('#subjectsInput')
     subjects_field.type("Maths", delay=50)
@@ -80,7 +81,7 @@ def test_form_demoqa(page: Page):
     # сверка даты
     current_date_value = page.get_attribute('#dateOfBirthInput', 'value')
     print(f'Current date from page: {current_date_value}')
-    assert current_date_value == today_date, "даты не совпадают"
+    check.is_equal(current_date_value, today_date, "dates not equal")
 
     # выбор штата
     page.locator('#state').click()
@@ -108,4 +109,42 @@ def test_form_demoqa(page: Page):
 
     page.locator(f'#react-select-4-option-{random.randint(0, city_count)}').click()
 
+    page.get_by_role("button", name="Submit").click()
+    expect(page.get_by_text("Thanks for submitting the form")).to_be_visible()
+    expect(page.get_by_role("button", name="Close")).to_be_visible()
+
     time.sleep(3)
+
+
+def test_check_forms(page: Page):
+
+    page.goto('https://demoqa.com/radio-button', wait_until='domcontentloaded')
+
+    yesradio = page.is_enabled('#yesRadio')
+    impressiveradio = page.is_enabled('#impressiveRadio')
+    noradio = page.is_enabled('#noRadio')
+
+    check.is_true(yesradio, "yesradio isn't active")
+    check.is_true(impressiveradio, "impressiveradio isn't active")
+    check.is_false(noradio, "noradio shouldn't be active")
+    
+    time.sleep(2)
+
+def test_check_visibility(page: Page):
+    
+    page.goto("https://demoqa.com/checkbox")
+
+    expect(page.get_by_role("checkbox", name="Select Home")).to_be_visible()
+    expect(page.get_by_role("checkbox", name="Select Desktop")).not_to_be_visible()
+
+    page.locator(".rc-tree-switcher").click()
+    
+    expect(page.get_by_role("checkbox", name="Select Desktop")).to_be_visible()
+
+def test_wait_for_selector(page: Page):
+
+    page.goto("https://demoqa.com/dynamic-properties")
+
+    page.get_by_role("button", name="Visible After 5 Seconds").wait_for(state='visible')
+
+    expect(page.get_by_role("button", name="Visible After 5 Seconds")).to_be_visible()
