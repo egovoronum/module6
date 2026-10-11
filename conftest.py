@@ -11,7 +11,7 @@ def browser(playwright):
     logger.info("поднимаем браузер")
     browser = playwright.chromium.launch(
         headless=False,
-        args=['--force-dark-mode', '--window-size=1920,1080']
+        args=['--force-dark-mode', '--window-size=1400,900']
     )
     
     # docker container on rpi400
@@ -26,7 +26,7 @@ def browser(playwright):
 @pytest.fixture(scope="function")
 def context(browser, request):
     context = browser.new_context(
-        viewport={'width': 1920, 'height': 1080},
+        viewport={'width': 1400, 'height': 900},
         color_scheme='dark',
     )
     context.set_default_timeout(DEFAULT_UI_TIMEOUT)
