@@ -1,3 +1,5 @@
+allure-pytest 
+allure-python-commons
 python-dotenv 
 pytest
 pytest-check
