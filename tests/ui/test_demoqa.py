@@ -15,8 +15,12 @@ def test_some_entities(page):
 
 
 def test_text_box(page: Page):
-    page.goto('https://demoqa.com/text-box', wait_until='domcontentloaded')
-    time.sleep(1) 
+    page.goto(
+    'https://demoqa.com/text-box',
+        wait_until='domcontentloaded'
+    )
+
+    time.sleep(1)
 
     username_locator = '#userName'
     page.type(username_locator, 'John Doe')
@@ -40,7 +44,11 @@ def test_text_box(page: Page):
     time.sleep(1)
 
 def test_button_demoqa(page: Page):
-    page.goto('https://demoqa.com/webtables', wait_until='domcontentloaded')
+    page.goto(
+    'https://demoqa.com/webtables',
+        wait_until='domcontentloaded'
+    )
+
     page.get_by_role("button", name="Add").click()
     expect(page.get_by_text("Registration Form")).to_be_visible(visible=True)
     page.get_by_placeholder("First Name").type(fake.first_name(), delay=50)
@@ -60,7 +68,10 @@ def test_form_demoqa(page: Page):
     today_date = date.today().strftime("%d %b %Y")
     print(f"Today's date: {today_date}")
 
-    page.goto('https://demoqa.com/automation-practice-form', wait_until='domcontentloaded')
+    page.goto(
+    'https://demoqa.com/automation-practice-form',
+        wait_until='domcontentloaded'
+    )
     
     page.get_by_placeholder("First Name").type(fake.first_name(), delay=50)
     page.get_by_placeholder("Last Name").type(fake.last_name(), delay=50)
@@ -118,7 +129,10 @@ def test_form_demoqa(page: Page):
 
 def test_check_forms(page: Page):
 
-    page.goto('https://demoqa.com/radio-button', wait_until='domcontentloaded')
+    page.goto(
+    'https://demoqa.com/radio-button',
+        wait_until='domcontentloaded'
+    )
 
     yesradio = page.is_enabled('#yesRadio')
     impressiveradio = page.is_enabled('#impressiveRadio')

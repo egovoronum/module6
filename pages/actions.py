@@ -7,11 +7,11 @@ class PageAction:
 
     @allure.step("Переход на страницу: {url}")
     def open_url(self, url: str):
-        self.page.goto(url)
+        self.page.goto(url, wait_until='domcontentloaded')
 
     @allure.step("Ввод текста в поле: {locator}")
     def enter_text(self, locator: str, text: str):
-        self.page.fill(locator, text)
+        self.page.type(locator, text, delay=50)
 
     @allure.step("Клик по элементу: {locator}")
     def click(self, locator: str):
