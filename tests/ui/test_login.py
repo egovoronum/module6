@@ -1,6 +1,5 @@
 import pytest
 import allure
-import time
 from playwright.sync_api import Page, expect
 
 from conftest import common_user
@@ -12,7 +11,7 @@ from pages.login_page import CinescopeLoginPage
 @allure.story("Успешная аутентификация")
 @allure.feature("Аутентификация пользователей")
 @allure.description("Тест проверяет корректную работу UI /login")
-@pytest.mark.UI
+@pytest.mark.ui
 @pytest.mark.regression
 class TestLogin:
     @allure.title("Проверка страницы логина {browser_name}")
@@ -24,9 +23,7 @@ class TestLogin:
     ) -> None:
 
         login_page.login(common_user.email, common_user.password)
-
-        time.sleep(1) # временный костыль из-за бага
-        page.reload(wait_until="networkidle") # временный костыль из-за бага
+        login_page.login_bug_workaround()
 
         expect(page).to_have_url("https://dev-cinescope.coconutqa.ru/")
         expect(page.get_by_role("button", name="Профиль")).to_be_visible()

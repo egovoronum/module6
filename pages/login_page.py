@@ -14,19 +14,22 @@ class CinescopeLoginPage(BasePage):
         self.password_input = '[data-qa-id="login_password_input"]'
         self.login_button = '[data-qa-id="login_submit_button"]'
 
-    with allure.step("Открытие страницы CinescopeLoginPage"):
-        def open(self):
-            self.open_url(self.url)
+    @allure.step("Открытие страницы CinescopeLoginPage")
+    def open(self) -> None:
+        self.open_url(self.url)
 
-    with allure.step("Ввод данных логина и клик по submit"):
-        def login(
-            self,
-            email: str,
-            password: str
-         ):
+    @allure.step("Ввод данных логина и клик по submit")
+    def login(
+        self,
+        email: str,
+        password: str
+     ) -> None:
 
-            self.enter_text(self.email_input, email)
-            self.enter_text(self.password_input, password)
-            self.click(self.login_button)
+        self.enter_text(self.email_input, email)
+        self.enter_text(self.password_input, password)
+        self.click(self.login_button)
 
-            expect(page).to_have_url("https://cinescope.example.com/")
+    @allure.step("Временный воркараунд бага с логином")
+    def login_bug_workaround(self, timeout:int = 1000) -> None:
+        self.page.wait_for_timeout(timeout)
+        self.page.reload(wait_until="networkidle")

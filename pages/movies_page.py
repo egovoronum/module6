@@ -34,3 +34,4 @@ class CinescopeMoviesPage(BasePage):
         def open_movie(self, movie_id):
             self.open_url(f"{self.url}/{movie_id}")
 
+

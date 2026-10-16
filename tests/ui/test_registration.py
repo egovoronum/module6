@@ -1,7 +1,7 @@
 import allure
 import pytest
-from playwright.sync_api import Page, expect
 
+from playwright.sync_api import Page, expect
 from models.base_models import CreateUserData
 from pages.register_page import CinescopeRegisterPage
 
