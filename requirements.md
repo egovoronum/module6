@@ -1,3 +1,8 @@
+pydantic
+sqlalchemy
+requests
+allure-pytest 
+allure-python-commons
 python-dotenv 
 pytest
 pytest-check
@@ -5,3 +10,6 @@ playwright
 pytest-playwright
 faker
 typing
+psycopg2-binary
+sqlalchemy
+pytest-rerunfailures
