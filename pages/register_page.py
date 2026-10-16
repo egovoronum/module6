@@ -3,6 +3,7 @@ import allure
 from pages.base_page import BasePage
 from playwright.sync_api import Page, expect
 
+REGISTER_SUCCESS_POPUP = "Подтвердите свою почту"
 
 class CinescopeRegisterPage(BasePage):
     def __init__(self, page: Page):
@@ -15,9 +16,10 @@ class CinescopeRegisterPage(BasePage):
         self.repeat_password_input = '[data-qa-id="register_password_repeat_input"]'
         self.submit_button = '[data-qa-id="register_submit_button"]'
 
-    @allure.step("Открытие страницы /register")
+    @allure.step("Открытие страницы регистрации")
     def open(self) -> None:
-        self.open_url(self.url)
+        with allure.step(f"Переход по {self.url}"):
+            self.open_url(self.url)
 
     @allure.step("Ввод данных регистрации и клик по submit")
     def register(
@@ -27,7 +29,14 @@ class CinescopeRegisterPage(BasePage):
         password: str
     ) -> None:
 
-        with allure.step("Заполнение полей"):
+        with allure.step(
+            f"""
+            Заполнение полей:
+            Имя: {self.full_name_input}
+            Имейл: {self.email_input}
+            Пароль: {self.password_input}
+            """
+        ):
             self.enter_text(self.full_name_input, full_name)
             self.enter_text(self.email_input, email)
             self.enter_text(self.password_input, password)
@@ -38,4 +47,7 @@ class CinescopeRegisterPage(BasePage):
 
     @allure.step("Проверка видимости поля 'подтвердите свою почту'")
     def check_registration_is_successful(self):
-        expect(self.page.get_by_text("Подтвердите свою почту")).to_be_visible()
+        with allure.step(f"Отображается сообщение: {REGISTER_SUCCESS_POPUP}"):
+            expect(
+                self.page.get_by_text(f"{REGISTER_SUCCESS_POPUP}")
+            ).to_be_visible()
