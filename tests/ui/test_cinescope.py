@@ -1,10 +1,9 @@
 import pytest
-import random
 from playwright.sync_api import Page, expect
-import time
-from faker import Faker 
+from faker import Faker
 
 fake = Faker()
+
 
 @pytest.mark.UI
 def test_text_box(page: Page) -> None:
@@ -19,9 +18,7 @@ def test_text_box(page: Page) -> None:
     page.locator('[data-qa-id="register_password_input"]').fill(password)
     page.locator('[data-qa-id="register_password_repeat_input"]').fill(password)
     page.click('[data-qa-id="register_submit_button"]')
-    time.sleep(5)
     page.wait_for_url('https://dev-cinescope.coconutqa.ru/login')
-    time.sleep(5)
+
     expect(page.get_by_text("Подтвердите свою почту")).to_be_visible(visible=True)
-    time.sleep(5)
 

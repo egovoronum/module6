@@ -12,6 +12,8 @@ __pycache__/
 .env
 .allure-report
 .allure-results
+.allure-report/
+.allure-resulsts/
 allure-report
 allure-results
 .logs/

@@ -1,6 +1,9 @@
-from pages.base_page import BasePage
-from playwright.sync_api import Page
+import allure
+
 from faker import Faker
+from playwright.sync_api import Page
+
+from pages.base_page import BasePage
 
 fake = Faker('en_US')
 
@@ -15,15 +18,17 @@ class CinescopeLoginPage(BasePage):
         self.password_input = '[data-qa-id="login_password_input"]'
         self.login_button = '[data-qa-id="login_submit_button"]'
 
-    def open(self):
-        self.open_url(self.url)
+    with allure.step("Открытие страницы CinescopeLoginPage"):
+        def open(self):
+            self.open_url(self.url)
 
-    def login(
-        self,
-        email: str,
-        password: str
-     ):
+    with allure.step("Ввод данных логина и клик по submit"):
+        def login(
+            self,
+            email: str,
+            password: str
+         ):
 
-        self.enter_text(self.email_input, email)
-        self.enter_text(self.password_input, password)
-        self.click(self.login_button)
+            self.enter_text(self.email_input, email)
+            self.enter_text(self.password_input, password)
+            self.click(self.login_button)

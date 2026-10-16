@@ -1,27 +1,33 @@
+import allure
+import pytest
 from playwright.sync_api import Page, expect
+
+from models.base_models import CreateUserData
 from pages.register_page import CinescopeRegisterPage
-from faker import Faker
 
-fake = Faker('en_US')
 
+@allure.epic("UI-тесты")
+@allure.description("""
+    Проверяет корректную работу UI /register
+    """)
+@pytest.mark.UI
 class TestRegistration:
-
     def test_registration(
         self,
         register_page: CinescopeRegisterPage,
-        page: Page
+        page: Page,
+        oneshot_user: CreateUserData
     ) -> None:
 
-        name = fake.name()
-        email = fake.email()
-        password = fake.password(
-            length=14,
-            special_chars=True,
-            digits=True,
-            upper_case=True,
-            lower_case=True
-        )
+        with allure.step("Регистрируем пользователя:"):
+            register_page.register(
+                oneshot_user.fullName,
+                oneshot_user.email,
+                oneshot_user.password
+            )
 
-        register_page.register(name, email, password)
-
-        expect(page.get_by_text("Подтвердите свою почту")).to_be_visible()
+        with allure.step(
+            """Проверяем видимость поля 'Подтвердите свою почту'
+            """
+        ):
+            expect(page.get_by_text("Подтвердите свою почту")).to_be_visible()

@@ -5,9 +5,7 @@ from playwright.sync_api import Page, expect
 from conftest import common_user
 from entities.user import User
 from pages.login_page import CinescopeLoginPage
-from faker import Faker
 
-fake = Faker('en_US')
 
 @allure.epic("UI-тесты")
 @allure.description("""
@@ -22,7 +20,9 @@ class TestLogin:
         common_user: User
     ) -> None:
 
-        with allure.step("Присваиваем переменные имейла и пароля из common_user"):
+        with allure.step("""
+            Передаем имейл и пароль из common_user в переменные
+            """):
             email = common_user.email
             password = common_user.password
 
@@ -35,8 +35,7 @@ class TestLogin:
 
         with allure.step("Проверяем страницу на ошибку 'Что-то пошло не так'"):
             if error.is_visible():
-                raise AssertionError(
-                    f"Логин не сработал")
+                raise AssertionError("Логин не сработал")
 
         with allure.step("Проверяем видимость 'Успешный вход'"):
             expect(success).to_be_visible()
