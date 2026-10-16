@@ -30,7 +30,4 @@ class TestRegistration:
             oneshot_user.password
         )
 
-        with allure.step(
-            "Проверка видимости поля 'Подтвердите свою почту'"
-            ):
-            expect(page.get_by_text("Подтвердите свою почту")).to_be_visible()
+        register_page.check_registration_is_successful()

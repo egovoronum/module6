@@ -1,7 +1,7 @@
 import allure
 
 from pages.base_page import BasePage
-from playwright.sync_api import Page
+from playwright.sync_api import Page, expect
 
 
 class CinescopeRegisterPage(BasePage):
@@ -32,3 +32,7 @@ class CinescopeRegisterPage(BasePage):
         self.enter_text(self.password_input, password)
         self.enter_text(self.repeat_password_input, password)
         self.click(self.submit_button)
+
+    @allure.step("Проверка видимости поля 'подтвердите свою почту'")
+    def check_registration_is_successful(self):
+        expect(self.page.get_by_text("Подтвердите свою почту")).to_be_visible()

@@ -1,6 +1,6 @@
 import allure
 
-from playwright.sync_api import Page
+from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
 
 # https://dev-cinescope.coconutqa.ru/login
@@ -33,3 +33,8 @@ class CinescopeLoginPage(BasePage):
     def login_bug_workaround(self, timeout:int = 1000) -> None:
         self.page.wait_for_timeout(timeout)
         self.page.reload(wait_until="networkidle")
+
+    @allure.step("Проверка на успешный логин")
+    def check_login_is_successful(self) -> None:
+        expect(self.page).to_have_url("https://dev-cinescope.coconutqa.ru/")
+        expect(self.page.get_by_role("button", name="Профиль")).to_be_visible()

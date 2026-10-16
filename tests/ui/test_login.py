@@ -24,6 +24,5 @@ class TestLogin:
 
         login_page.login(common_user.email, common_user.password)
         login_page.login_bug_workaround()
+        login_page.check_login_is_successful()
 
-        expect(page).to_have_url("https://dev-cinescope.coconutqa.ru/")
-        expect(page.get_by_role("button", name="Профиль")).to_be_visible()
