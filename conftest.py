@@ -3,7 +3,6 @@ import os
 
 # ─── доп библиотеки ──────────────────────────────────────────────────────────
 import requests
-import allure
 from dotenv import load_dotenv
 from faker import Faker
 from typing import Generator

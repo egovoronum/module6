@@ -2,7 +2,7 @@ import constants
 import custom_requester.custom_requester
 import requests
 import allure
-from models.base_models import CreateUserData
+from models.base_models import CreateUserData, LoginData
 
 class AuthAPI(custom_requester.custom_requester.CustomRequester):
     
@@ -22,11 +22,11 @@ class AuthAPI(custom_requester.custom_requester.CustomRequester):
         )
 
     @allure.step("Авторизация пользователя")
-    def login_user(self, login_data:dict, expected_status=201):
+    def login_user(self, login_data:LoginData, expected_status=201):
         return self.send_request(
             method="POST",
             endpoint=constants.LOGIN_ENDPOINT,
-            data=login_data,
+            data=login_data.model_dump(),
             expected_status=expected_status
         )
 
@@ -45,7 +45,9 @@ class AuthAPI(custom_requester.custom_requester.CustomRequester):
             "email": user_creds[0],
             "password": user_creds[1]
         }
-        
+
+        login_data = LoginData.model_validate(login_data)
+
         response = self.login_user(login_data, expected_status=201).json()
         
         if "accessToken" not in response:
