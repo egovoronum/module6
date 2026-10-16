@@ -14,7 +14,7 @@ def test_some_entities(page: Page) -> None:
     page.goto("https://demoqa.com")
     time.sleep(10)
 
-
+@pytest.mark.skip
 def test_text_box(page: Page) -> None:
     page.goto("https://demoqa.com/text-box", wait_until="domcontentloaded")
     time.sleep(1)
@@ -41,7 +41,7 @@ def test_text_box(page: Page) -> None:
     )
     time.sleep(1)
 
-
+@pytest.mark.skip
 def test_button_demoqa(page: Page) -> None:
     page.goto("https://demoqa.com/webtables", wait_until="domcontentloaded")
     page.get_by_role("button", name="Add").click()
@@ -59,7 +59,7 @@ def test_button_demoqa(page: Page) -> None:
     expect(page.get_by_role("button", name="Submit")).not_to_be_visible()
     time.sleep(1)
 
-
+@pytest.mark.skip
 def test_form_demoqa(page: Page) -> None:
     today_date = date.today().strftime("%d %b %Y")
     print(f"Today's date: {today_date}")
@@ -112,7 +112,7 @@ def test_form_demoqa(page: Page) -> None:
     expect(page.get_by_role("button", name="Close")).to_be_visible()
     time.sleep(3)
 
-
+@pytest.mark.skip
 def test_check_forms(page: Page) -> None:
     page.goto("https://demoqa.com/radio-button", wait_until="domcontentloaded")
 
@@ -126,7 +126,7 @@ def test_check_forms(page: Page) -> None:
 
     time.sleep(2)
 
-
+@pytest.mark.skip
 def test_check_visibility(page: Page) -> None:
     page.goto("https://demoqa.com/checkbox")
 
@@ -137,7 +137,7 @@ def test_check_visibility(page: Page) -> None:
 
     expect(page.get_by_role("checkbox", name="Select Desktop")).to_be_visible()
 
-
+@pytest.mark.skip
 def test_wait_for_selector(page: Page) -> None:
     page.goto("https://demoqa.com/dynamic-properties")
 

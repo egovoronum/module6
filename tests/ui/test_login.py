@@ -1,5 +1,6 @@
 import pytest
 import allure
+import time
 from playwright.sync_api import Page, expect
 
 from conftest import common_user
@@ -30,13 +31,16 @@ class TestLogin:
 
         login_page.login(email, password)
 
+        time.sleep(1)
+        page.reload(wait_until="networkidle")
+
         with allure.step("Задаем success/error параметры"):
-            success = page.get_by_text("Успешный вход")
+            success = page.get_by_role("button", name="Профиль")
             error = page.get_by_text("Что-то пошло не так")
 
         with allure.step("Проверяем страницу на ошибку 'Что-то пошло не так'"):
             if error.is_visible():
-                raise AssertionError("Логин не сработал")
+                raise AssertionError("Логин не сработал, измени time.sleep() перед page.reload()")
 
-        with allure.step("Проверяем видимость 'Успешный вход'"):
+        with allure.step("Проверяем видимость 'Профиль' на главной странице"):
             expect(success).to_be_visible()

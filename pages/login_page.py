@@ -1,11 +1,7 @@
 import allure
 
-from faker import Faker
 from playwright.sync_api import Page
-
 from pages.base_page import BasePage
-
-fake = Faker('en_US')
 
 # https://dev-cinescope.coconutqa.ru/login
 

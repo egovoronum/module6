@@ -59,9 +59,7 @@ class CustomRequester:
 
     allure.step("Логирование запросов и ответов")
     def log_request_and_response(self, response):
-        """
-        :param response: Объект ответа requests.Response.
-        """
+
         try:
             request = response.request
             GREEN = '\033[32m'
@@ -85,18 +83,15 @@ class CustomRequester:
                 f"{body}"
             )
 
-            # Обрабатываем ответ
             response_status = response.status_code
             is_success = response.ok
             response_data = response.text
 
-            # Попытка форматировать JSON
             try:
                 response_data = json.dumps(json.loads(response.text), indent=4, ensure_ascii=False)
             except json.JSONDecodeError:
                 pass  # Оставляем текст, если это не JSON
 
-            # Логируем ответ
             self.logger.info(f"\n{'=' * 40} RESPONSE {'=' * 40}")
             if not is_success:
                 self.logger.info(

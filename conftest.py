@@ -2,18 +2,20 @@
 import os
 
 # ─── доп библиотеки ──────────────────────────────────────────────────────────
+import random
 import allure
 import requests
 from dotenv import load_dotenv
 from faker import Faker
 from typing import Generator
 
+from pages.movies_page import CinescopeMoviesPage
 # ─── модули проекта ──────────────────────────────────────────────────────────
 from utils.data_generator import DataGenerator
 from clients.api_manager import ApiManager
 from entities.user import User
 from enums.roles import Roles
-from models.base_models import CreateUserData
+from models.base_models import CreateUserData, Movie, CreateMovieData, Genre, CreateReviewData
 
 # ─── UI test imports──────────────────────────────────────────────────────────
 import re
@@ -67,7 +69,18 @@ def register_page(page: Page) -> CinescopeRegisterPage:
     return register_page
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
+def movies_page(page: Page, common_user: User) -> CinescopeMoviesPage:
+    movies_page = CinescopeMoviesPage(page)
+    movies_page.login(common_user.email, common_user.password)
+
+    time.sleep(1)
+    page.reload(wait_until="networkidle")
+
+    return movies_page
+
+
+@pytest.fixture(scope="function")
 def browser(playwright):
     logger.info("поднимаем браузер")
     browser = playwright.chromium.launch(
@@ -183,7 +196,6 @@ def common_user(
 
     yield common_user
 
-
     with allure.step("tearing down common_user"):
         super_admin.api.user_api.delete_user(
             new_common_user_id,
@@ -191,7 +203,7 @@ def common_user(
         )
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def super_admin(user_session) -> User:
     new_session = user_session()
 
@@ -204,3 +216,82 @@ def super_admin(user_session) -> User:
     super_admin.api.auth_api.authenticate(super_admin.creds)
 
     return super_admin
+
+
+@pytest.fixture(scope="function")
+def oneshot_genre(super_admin:User) -> Generator[Genre, None, None]:
+
+    data = {
+        "name": f"{fake.word()} и точка!!!"
+    }
+
+    response = super_admin.api.movies_api.create_genre(data, expected_status=201)
+
+    genre_model = Genre.model_validate(response.json())
+    genre_id = genre_model.id
+
+    yield genre_model
+    super_admin.api.movies_api.delete_genre(genre_id)
+
+
+@pytest.fixture(scope="function")
+def valid_movie_data(oneshot_genre: Genre) -> CreateMovieData:
+
+    genre = oneshot_genre
+    genre_id = genre.id
+
+    data = {
+        "name": f"{fake.word()} в {fake.word()}",
+        "imageUrl": "https://example.com/image.png",
+        "price": random.randint(50, 1000),
+        "description": f"{fake.text(5)} вызвал сомнения у {fake.text(5)}",
+        "location": "SPB",
+        "published": True,
+        "genreId": genre_id
+    }
+
+    model = CreateMovieData.model_validate(data)
+
+    return model
+
+
+@pytest.fixture(scope="function")
+def oneshot_movie(
+    super_admin:User,
+    valid_movie_data:CreateMovieData
+) -> Generator[Movie, None, None]:
+
+    with allure.step("запрос на создание"):
+        response = super_admin.api.movies_api.create_movie(
+            valid_movie_data,
+            expected_status=201)
+
+    with allure.step("валидация модели"):
+        movie_model =  Movie.model_validate(response.json())
+
+        yield movie_model
+    with allure.step("teardown"):
+        super_admin.api.movies_api.delete_movie(movie_model.id, expected_status=200)
+
+
+@pytest.fixture(scope="function")
+def generate_review(super_admin) -> Generator[CreateReviewData, None, None]:
+    data = {
+        "rating": 5,
+        "text": f"Отличный фильм, вызывает {fake.word()}"
+    }
+
+    model = CreateReviewData.model_validate(data)
+
+    yield model
+
+    params = {"movieId": model.movieId, "userId": model.userId}
+
+    try:
+        super_admin.api.movies_api.delete_review(
+            params=params,
+            expected_status=200
+        )
+
+    except Exception as e:
+        f"Failed to delete review with ID at teardown: {params["userId"]}"

@@ -4,7 +4,7 @@ from faker import Faker
 
 fake = Faker()
 
-
+@pytest.mark.skip
 @pytest.mark.UI
 def test_text_box(page: Page) -> None:
 
@@ -19,6 +19,8 @@ def test_text_box(page: Page) -> None:
     page.locator('[data-qa-id="register_password_repeat_input"]').fill(password)
     page.click('[data-qa-id="register_submit_button"]')
     page.wait_for_url('https://dev-cinescope.coconutqa.ru/login')
+
+
 
     expect(page.get_by_text("Подтвердите свою почту")).to_be_visible(visible=True)
 

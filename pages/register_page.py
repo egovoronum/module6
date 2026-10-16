@@ -31,5 +31,4 @@ class CinescopeRegisterPage(BasePage):
             self.enter_text(self.email_input, email)
             self.enter_text(self.password_input, password)
             self.enter_text(self.repeat_password_input, password)
-
             self.click(self.submit_button)
