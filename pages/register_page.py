@@ -27,11 +27,14 @@ class CinescopeRegisterPage(BasePage):
         password: str
     ) -> None:
 
-        self.enter_text(self.full_name_input, full_name)
-        self.enter_text(self.email_input, email)
-        self.enter_text(self.password_input, password)
-        self.enter_text(self.repeat_password_input, password)
-        self.click(self.submit_button)
+        with allure.step("Заполнение полей"):
+            self.enter_text(self.full_name_input, full_name)
+            self.enter_text(self.email_input, email)
+            self.enter_text(self.password_input, password)
+            self.enter_text(self.repeat_password_input, password)
+
+        with allure.step("Клик по кнопке регистрации"):
+            self.click(self.submit_button)
 
     @allure.step("Проверка видимости поля 'подтвердите свою почту'")
     def check_registration_is_successful(self):
