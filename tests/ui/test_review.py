@@ -28,22 +28,6 @@ class TestReview:
     ) -> None:
 
         movies_page.open_movie(oneshot_movie.id)
-
-        with allure.step("Проверка видимости текстового поля обзора"):
-            expect(
-                page.locator('[data-qa-id="movie_review_input"]')
-            ).to_be_visible()
-
-        with allure.step("Ввод сгенерированного текста обзора"):
-            page.locator(
-                '[data-qa-id="movie_review_input"]').type(
-                f"{generate_review.text}",
-                delay=50
-            )
-
-        with allure.step("Клик по кнопке submit"):
-            page.locator('[data-qa-id="movie_review_submit_button"]').click()
-
-        with allure.step("Проверка видимости поп-апа 'Отзыв успешно создан'"):
-            expect(page.get_by_text("Отзыв успешно создан")).to_be_visible()
+        movies_page.submit_review(generate_review)
+        movies_page.check_review_is_posted()
 
