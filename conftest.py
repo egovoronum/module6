@@ -82,7 +82,6 @@ def movies_page(page: Page, common_user: User) -> CinescopeMoviesPage:
 
 @pytest.fixture(scope="function")
 def browser(playwright):
-    logger.info("поднимаем браузер")
     browser = playwright.chromium.launch(
         headless=False,
         args=['--force-dark-mode', '--window-size=800,600'],
@@ -94,7 +93,6 @@ def browser(playwright):
 
     yield browser
 
-    logger.info("закрываем браузер")
     browser.close()
 
 
@@ -104,6 +102,7 @@ def context(browser, request):
         viewport={'width': 800, 'height': 600},
         color_scheme='dark'
     )
+
     context.set_default_timeout(DEFAULT_UI_TIMEOUT)
     context.tracing.start(screenshots=True, snapshots=True, sources=True)
 
@@ -111,7 +110,6 @@ def context(browser, request):
 
     name = re.sub(r"[^\w.-]", "_", request.node.name)
     context.tracing.stop(path=f"traces/{name}.zip")
-    logger.info("контекст опускается")
     context.close()
 
 
@@ -121,7 +119,6 @@ def page(context):
 
     yield page
 
-    logger.info("страница опускается")
     page.close()
 
 
@@ -189,14 +186,15 @@ def common_user(
         [Roles.USER],
         new_session)
 
-    response = super_admin.api.user_api.create_user(create_user_data)
+    with allure.step(f"Создание юзера с email: {common_user.email}"):
+        response = super_admin.api.user_api.create_user(create_user_data)
 
     data = response.json()
     new_common_user_id = data["id"]
 
     yield common_user
 
-    with allure.step("tearing down common_user"):
+    with allure.step(f"tearing down, имейл юзера {common_user.email}"):
         super_admin.api.user_api.delete_user(
             new_common_user_id,
             expected_status=200
@@ -213,7 +211,8 @@ def super_admin(user_session) -> User:
         [Roles.SUPER_ADMIN],
         new_session)
 
-    super_admin.api.auth_api.authenticate(super_admin.creds)
+    with allure.step("аутентификация супер админа"):
+        super_admin.api.auth_api.authenticate(super_admin.creds)
 
     return super_admin
 
@@ -225,13 +224,18 @@ def oneshot_genre(super_admin:User) -> Generator[Genre, None, None]:
         "name": f"{fake.word()} и точка!!!"
     }
 
-    response = super_admin.api.movies_api.create_genre(data, expected_status=201)
+    response = super_admin.api.movies_api.create_genre(
+        data,
+        expected_status=201
+    )
 
     genre_model = Genre.model_validate(response.json())
     genre_id = genre_model.id
 
     yield genre_model
-    super_admin.api.movies_api.delete_genre(genre_id)
+
+    with allure.step(f"Teardown жанра ID: {genre_id}"):
+        super_admin.api.movies_api.delete_genre(genre_id)
 
 
 @pytest.fixture(scope="function")
@@ -250,7 +254,8 @@ def valid_movie_data(oneshot_genre: Genre) -> CreateMovieData:
         "genreId": genre_id
     }
 
-    model = CreateMovieData.model_validate(data)
+    with allure.step("валидация модели"):
+        model = CreateMovieData.model_validate(data)
 
     return model
 
@@ -270,8 +275,12 @@ def oneshot_movie(
         movie_model =  Movie.model_validate(response.json())
 
         yield movie_model
-    with allure.step("teardown"):
-        super_admin.api.movies_api.delete_movie(movie_model.id, expected_status=200)
+
+    with allure.step(f"teardown ID: {movie_model.id}"):
+        super_admin.api.movies_api.delete_movie(
+            movie_model.id,
+            expected_status=200
+        )
 
 
 @pytest.fixture(scope="function")
@@ -284,22 +293,25 @@ def generate_review(
         "text": f"Отличный фильм, вызывает {fake.word()}"
     }
 
-    model = CreateReviewData.model_validate(data)
+    with allure.step("валидация модели"):
+        model = CreateReviewData.model_validate(data)
 
     yield model
 
-    if "oneshot_movie" in request.fixturenames:
-        return
+    with allure.step("Проверка нужен ли teardown"):
+        if "oneshot_movie" in request.fixturenames:
+            return
 
     params = {"movieId": model.movieId, "userId": model.userId}
 
-    try:
-        super_admin.api.movies_api.delete_review(
-            params=params,
-            expected_status=200
-        )
+    with allure.step(f"teardown с параметрами: {params}"):
+        try:
+            super_admin.api.movies_api.delete_review(
+                params=params,
+                expected_status=200
+            )
 
-    except requests.exceptions.RequestException:
-        raise RuntimeError(
-            f"Failed to delete review with ID at teardown: {params["userId"]}"
-        )
+        except requests.exceptions.RequestException:
+            raise RuntimeError(
+                f"Failed to delete review with ID at teardown: {params["userId"]}"
+            )
