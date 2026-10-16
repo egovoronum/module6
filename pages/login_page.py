@@ -28,3 +28,5 @@ class CinescopeLoginPage(BasePage):
             self.enter_text(self.email_input, email)
             self.enter_text(self.password_input, password)
             self.click(self.login_button)
+
+            expect(page).to_have_url("https://cinescope.example.com/")

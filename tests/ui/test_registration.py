@@ -10,7 +10,10 @@ from pages.register_page import CinescopeRegisterPage
 @allure.description("""
     Проверяет корректную работу UI /register
     """)
+@allure.story("Успешная регистрация")
+@allure.feature("Регистрация пользователей")
 @pytest.mark.UI
+@pytest.mark.regression
 class TestRegistration:
 
     @allure.title("UI-тест страницы регистрации [{browser_name}]")

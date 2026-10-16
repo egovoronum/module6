@@ -8,10 +8,13 @@ from models.base_models import Movie, CreateReviewData
 
 
 @allure.epic("UI-тесты")
+@allure.story("Успешное размещение обзора на фильм")
+@allure.feature("Размещение обзора")
 @allure.description("""
     Проверяет корректную работу отзывов 
     """)
 @pytest.mark.UI
+@pytest.mark.regression
 class TestReview:
 
     @allure.title("Проверка страницы ревью {browser_name}")
