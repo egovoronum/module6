@@ -13,6 +13,8 @@ from pages.login_page import CinescopeLoginPage
     """)
 @pytest.mark.UI
 class TestLogin:
+
+    @allure.title("Проверка страницы логина {browser_name}")
     def test_login_page(
         self,
         login_page: CinescopeLoginPage,
@@ -26,8 +28,7 @@ class TestLogin:
             email = common_user.email
             password = common_user.password
 
-        with allure.step("Ввод данных для логина"):
-            login_page.login(email, password)
+        login_page.login(email, password)
 
         with allure.step("Задаем success/error параметры"):
             success = page.get_by_text("Успешный вход")

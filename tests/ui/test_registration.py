@@ -12,6 +12,8 @@ from pages.register_page import CinescopeRegisterPage
     """)
 @pytest.mark.UI
 class TestRegistration:
+
+    @allure.title("UI-тест страницы регистрации [{browser_name}]")
     def test_registration(
         self,
         register_page: CinescopeRegisterPage,
@@ -19,15 +21,10 @@ class TestRegistration:
         oneshot_user: CreateUserData
     ) -> None:
 
-        with allure.step("Регистрируем пользователя:"):
-            register_page.register(
-                oneshot_user.fullName,
-                oneshot_user.email,
-                oneshot_user.password
-            )
+        register_page.register(
+            oneshot_user.fullName,
+            oneshot_user.email,
+            oneshot_user.password
+        )
 
-        with allure.step(
-            """Проверяем видимость поля 'Подтвердите свою почту'
-            """
-        ):
-            expect(page.get_by_text("Подтвердите свою почту")).to_be_visible()
+        expect(page.get_by_text("Подтвердите свою почту")).to_be_visible()

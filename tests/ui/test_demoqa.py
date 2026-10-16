@@ -9,7 +9,6 @@ from pytest_check import check
 
 fake = Faker("en_US")
 
-
 @pytest.mark.skip
 def test_some_entities(page: Page) -> None:
     page.goto("https://demoqa.com")

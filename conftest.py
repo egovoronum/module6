@@ -34,7 +34,6 @@ PROXY_CONFIG = {
     "server": "socks5://192.168.1.151:10808"
 }
 
-# ─── fixtures─────────────────────────────────────────────────────────────────
 def env_check(name: str) -> str:
     value = os.getenv(name)
     if value is None:
@@ -47,6 +46,7 @@ ADMIN_EMAIL = env_check("ADMIN_EMAIL")
 ADMIN_PASSWORD = env_check("ADMIN_PASSWORD")
 
 
+# ─── fixtures─────────────────────────────────────────────────────────────────
 @pytest.fixture(scope="function")
 def login_page(page: Page) -> CinescopeLoginPage:
     login_page = CinescopeLoginPage(page)
