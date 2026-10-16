@@ -34,7 +34,6 @@ class CinescopeRegisterPage(BasePage):
             Заполнение полей:
             Имя: {self.full_name_input}
             Имейл: {self.email_input}
-            Пароль: {self.password_input}
             """
         ):
             self.enter_text(self.full_name_input, full_name)

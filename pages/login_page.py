@@ -29,9 +29,8 @@ class CinescopeLoginPage(BasePage):
 
         with allure.step(
                 f"""
-                Вводим поля:
+                Вводим email и пароль:
                 Email: {self.email_input}
-                Password: {self.password_input}
                 """
         ):
             self.enter_text(self.email_input, email)
