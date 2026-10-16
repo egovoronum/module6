@@ -293,5 +293,5 @@ def generate_review(super_admin) -> Generator[CreateReviewData, None, None]:
             expected_status=200
         )
 
-    except Exception as e:
-        f"Failed to delete review with ID at teardown: {params["userId"]}"
+    except requests.exceptions.RequestException:
+        raise RuntimeError(f"Failed to delete review with ID at teardown: {params["userId"]}")
