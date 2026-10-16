@@ -1,4 +1,5 @@
 pydantic
+sqlalchemy
 requests
 allure-pytest 
 allure-python-commons
@@ -9,3 +10,6 @@ playwright
 pytest-playwright
 faker
 typing
+psycopg2-binary
+sqlalchemy
+pytest-rerunfailures
