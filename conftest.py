@@ -2,6 +2,7 @@
 import os
 
 # ─── доп библиотеки ──────────────────────────────────────────────────────────
+import allure
 import requests
 from dotenv import load_dotenv
 from faker import Faker
@@ -180,14 +181,14 @@ def common_user(
     data = response.json()
     new_common_user_id = data["id"]
 
-    return common_user
+    yield common_user
 
-    #
-    # with allure.step("tearing down common_user"):
-    #     super_admin.api.user_api.delete_user(
-    #         new_common_user_id,
-    #         expected_status=200
-    #     )
+
+    with allure.step("tearing down common_user"):
+        super_admin.api.user_api.delete_user(
+            new_common_user_id,
+            expected_status=200
+        )
 
 
 @pytest.fixture
