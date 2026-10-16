@@ -23,24 +23,18 @@ class TestLogin:
         common_user: User
     ) -> None:
 
-        with allure.step("""
-            Передаем имейл и пароль из common_user в переменные
-            """):
-            email = common_user.email
-            password = common_user.password
+        email = common_user.email
+        password = common_user.password
 
         login_page.login(email, password)
 
         time.sleep(1)
         page.reload(wait_until="networkidle")
 
-        with allure.step("Задаем success/error параметры"):
-            success = page.get_by_role("button", name="Профиль")
-            error = page.get_by_text("Что-то пошло не так")
+        success = page.get_by_role("button", name="Профиль")
+        error = page.get_by_text("Что-то пошло не так")
 
-        with allure.step("Проверяем страницу на ошибку 'Что-то пошло не так'"):
-            if error.is_visible():
-                raise AssertionError("Логин не сработал, измени time.sleep() перед page.reload()")
+        if error.is_visible():
+            raise AssertionError("Логин не сработал, измени time.sleep() перед page.reload()")
 
-        with allure.step("Проверяем видимость 'Профиль' на главной странице"):
-            expect(success).to_be_visible()
+        expect(success).to_be_visible()
