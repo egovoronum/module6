@@ -14,7 +14,7 @@ from models.base_models import Movie, CreateReviewData
 @pytest.mark.UI
 class TestReview:
 
-    @allure.title("Проверка страницы логина {browser_name}")
+    @allure.title("Проверка страницы ревью {browser_name}")
     def test_review(
         self,
         movies_page: CinescopeMoviesPage,
