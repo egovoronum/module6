@@ -34,6 +34,12 @@ class TestLogin:
         error = page.get_by_text("Что-то пошло не так")
 
         if error.is_visible():
-            raise AssertionError("Логин не сработал, измени time.sleep() перед page.reload()")
+            raise AssertionError(
+                "Логин не сработал, измени time.sleep() перед page.reload()"
+            )
 
-        expect(success).to_be_visible()
+        with allure.step("""
+            Проверка видимости поля Профиль на главной странице
+            """
+            ):
+            expect(success).to_be_visible()
