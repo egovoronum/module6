@@ -27,9 +27,8 @@ class TestLogin:
         password = common_user.password
 
         login_page.login(email, password)
-
         time.sleep(1)
-        page.reload(wait_until="networkidle") # костыль пока не пофиксят UI логина
+        page.reload(wait_until="networkidle") # далее костыль пока не пофиксят UI логина
 
         success = page.get_by_role("button", name="Профиль")
         error = page.get_by_text("Что-то пошло не так")
