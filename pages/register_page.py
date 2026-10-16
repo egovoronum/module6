@@ -30,11 +30,7 @@ class CinescopeRegisterPage(BasePage):
     ) -> None:
 
         with allure.step(
-            f"""
-            Заполнение полей:
-            Имя: {self.full_name_input}
-            Имейл: {self.email_input}
-            """
+            f"Заполнение - Имя: {self.full_name_input} Имейл: {self.email_input}"
         ):
             self.enter_text(self.full_name_input, full_name)
             self.enter_text(self.email_input, email)

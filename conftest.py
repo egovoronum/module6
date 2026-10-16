@@ -275,7 +275,10 @@ def oneshot_movie(
 
 
 @pytest.fixture(scope="function")
-def generate_review(super_admin) -> Generator[CreateReviewData, None, None]:
+def generate_review(
+        super_admin: User, request
+) -> Generator[CreateReviewData, None, None]:
+
     data = {
         "rating": 5,
         "text": f"Отличный фильм, вызывает {fake.word()}"
@@ -284,6 +287,9 @@ def generate_review(super_admin) -> Generator[CreateReviewData, None, None]:
     model = CreateReviewData.model_validate(data)
 
     yield model
+
+    if "oneshot_movie" in request.fixturenames:
+        return
 
     params = {"movieId": model.movieId, "userId": model.userId}
 
@@ -294,4 +300,6 @@ def generate_review(super_admin) -> Generator[CreateReviewData, None, None]:
         )
 
     except requests.exceptions.RequestException:
-        raise RuntimeError(f"Failed to delete review with ID at teardown: {params["userId"]}")
+        raise RuntimeError(
+            f"Failed to delete review with ID at teardown: {params["userId"]}"
+        )
