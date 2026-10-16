@@ -1,3 +1,5 @@
+pydantic
+requests
 allure-pytest 
 allure-python-commons
 python-dotenv 

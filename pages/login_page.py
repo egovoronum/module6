@@ -7,19 +7,18 @@ fake = Faker('en_US')
 # https://dev-cinescope.coconutqa.ru/login
 
 class CinescopeLoginPage(BasePage):
-    def __init__(self, page: Page):
+    def __init__(self, page: Page) -> None:
         super().__init__(page)
 
         self.url = f"{self.home_url}login"
-
-        self.email_input = '["data-qa-id="login_email_input"]'
-        self.password_input = '["data-qa-id="login_password_input"]'
-        self.login_button = '["data-qa-id="login_submit_button"]'
+        self.email_input = '[data-qa-id="login_email_input"]'
+        self.password_input = '[data-qa-id="login_password_input"]'
+        self.login_button = '[data-qa-id="login_submit_button"]'
 
     def open(self):
         self.open_url(self.url)
 
-    def register(
+    def login(
         self,
         email: str,
         password: str

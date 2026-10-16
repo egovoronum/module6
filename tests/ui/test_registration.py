@@ -2,7 +2,7 @@ from playwright.sync_api import Page, expect
 from pages.register_page import CinescopeRegisterPage
 from faker import Faker
 
-fake = Faker()
+fake = Faker('en_US')
 
 class TestRegistration:
 
